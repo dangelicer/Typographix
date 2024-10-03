@@ -1,42 +1,52 @@
 //Dark & Light Modes
 const themeSwitcher = document.getElementById('theme-switcher');
 
-function lightMode () {
-    themeSwitcher.children[0].textContent = 'Light Mode';
-    themeSwitcher.children[1].classList.replace('fa-moon', 'fa-sun');
+// Update Icon
+function updateThemeIcon (isDarkMode) {
+    themeSwitcher.children[0].textContent = isDarkMode ? 'Dark Mode' : 'Light Mode';
+    themeSwitcher.children[1].classList.replace(isDarkMode ? 'fa-sun' : 'fa-moon', isDarkMode ? 'fa-moon' : 'fa-sun');
 }
 
-function darkMode () {
-    themeSwitcher.children[0].textContent = 'Dark Mode';
-    themeSwitcher.children[1].classList.replace('fa-sun', 'fa-moon');
+// Determine if dark mode is preffered
+function prefersDarkMode () {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
+// Set theme based on preferance
+function setThemeOnPreference () {
+    const isDarkMode = prefersDarkMode()
+    document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+    updateThemeIcon(isDarkMode);
 }
 
 function switchTheme () {
     const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+}
 
-    if (!currentTheme || currentTheme === 'light') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-        darkMode();
+// Check Local Storage
+function initializeTheme () {
+    const savedTheme = localStorage.getItem('theme');
+
+    if (savedTheme) {
+        document.documentElement.setAttribute('theme', savedTheme);
+        updateThemeIcon(savedTheme === 'dark')
     } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
-        lightMode();
+        setThemeOnPreference
     }
 }
 
+// Listen for theme changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setThemeOnPreference)
 themeSwitcher.addEventListener('click', switchTheme);
 
-if (localStorage.theme) {
-    document.documentElement.setAttribute('data-theme', localStorage.theme)
-    if (localStorage.theme === 'dark') {
-        darkMode();
-    } else {
-        lightMode();
-    }
-}
+// Initialize theme when script loads
+initializeTheme();
 
-//Nav Menu
+//Nav Menu ------------------------------------
 const nav = document.getElementById('nav');
 const menuIcon = document.querySelector('.menu-icon');
 

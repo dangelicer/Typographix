@@ -415,3 +415,14 @@ footer {
         border-bottom: 300px solid #EAE2B7;
     }
 }
+
+/* Reduced Motion ------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    header {
+        animation: none;
+    }
+
+    .icons-bar-i {
+        animation: none;
+    }
+}
