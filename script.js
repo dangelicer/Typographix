@@ -24,7 +24,7 @@ function switchTheme () {
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    updateThemeIcon(newTheme);
+    updateThemeIcon(newTheme === 'dark');
 }
 
 // Check Local Storage
@@ -32,7 +32,7 @@ function initializeTheme () {
     const savedTheme = localStorage.getItem('theme');
 
     if (savedTheme) {
-        document.documentElement.setAttribute('theme', savedTheme);
+        document.documentElement.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme === 'dark')
     } else {
         setThemeOnPreference
